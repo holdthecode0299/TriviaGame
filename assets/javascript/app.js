@@ -18,7 +18,6 @@ window.onload = function () {
         {   question:"What team is Manchester United's rival?",
             answers: ['Arsenal', 'Paris Saint German', 'FC Barcalona', 'Chelsea'],
             correctAnswer: 'Arsenal', 
-
         },
         {
             question: "Which comany sponsors Manchester United?",
@@ -31,14 +30,13 @@ window.onload = function () {
             correctAnswer: '13', 
         },
     ]
-
-    var correct = 0;
-    var wrong = 0;
-    var unanswered = 0;
         
     $("#correct").text(correct);
+    var correct = 0;
     $("#wrong").text(wrong);
+    var wrong = 0;
     $("#unanswered").text(unanswered);
+    var unanswered = 0;
 // On click start button QUIZ CONTAINER DISPLAY 
 // questions pop up w/ answer radio button timer starts
 
@@ -63,7 +61,7 @@ window.onload = function () {
             $("#timeRemaining").text(timeRemaining)
             timeRemaining -= 1;
 
-            if(timeRemaining <= 0) {
+            if(timeRemaining === 0) {
                 clearInterval(timer);
                 stop();
                 alert("TIMES UP!");
