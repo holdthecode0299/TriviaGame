@@ -1,5 +1,6 @@
-window.onload = function () {
-    var trivia = [
+var card = $("#quiz-area");
+
+var questions = [
         {
             question: "Who is Manchester United's all time top scorer?",
             answers: ['Bobby Charlton','Wayne Rooney', 'Cristiano Ronaldo', 'Lionel Messi'],
@@ -29,64 +30,78 @@ window.onload = function () {
             answers: ['13', '1', '7', '25', '10'],
             correctAnswer: '13', 
         },
-    ]
-        
-    $("#correct").text(correct);
-    var correct = 0;
-    $("#wrong").text(wrong);
-    var wrong = 0;
-    $("#unanswered").text(unanswered);
-    var unanswered = 0;
-// On click start button QUIZ CONTAINER DISPLAY 
-// questions pop up w/ answer radio button timer starts
+];
 
-    $("#start").on("click", function() {
-        for (var i = 0; i < trivia.length; i++) {
-            var p = $("<p>")
-            p.text(trivia[i].question)
-            $(".trivia").append(p)
-            
-            for (var j = 0; j < trivia[i].answers.length; j++) {
-                var answers = $("<input type='radio'>")
-                answers.attr("name", "question" + i).attr("value", trivia[i].answers[j])
-                var label = $("<label>")
-                // answers.text(trivia[i].answers[j])
-                label.text(trivia[i].answers[j])
-                $(".trivia").append(answers).append(label)
-            }
-        }
+// Variable that will hold the setInterval
+var timer;
 
-        var timeRemaining = 30;
-        var timer = setInterval(function() {
-            $("#timeRemaining").text(timeRemaining)
-            timeRemaining -= 1;
+var game = {
+  correct: 0,
+  incorrect: 0,
+  counter: 30,
 
-            if(timeRemaining === 0) {
-                clearInterval(timer);
-                stop();
-                alert("TIMES UP!");
-            }
-        },1000)
+  countdown: function() {
+    game.counter--;
+    $("#counter-number").html(game.counter);
+    if (game.counter === 0) {
+      console.log("TIME UP");
+      game.done();
+    }
+  },
 
-        
-    })
-    $("#done").on("click", function() {
-        for (var i=0; i < trivia.length; i++) {
-            var value = $(`input[name="question${i}"]:checked`).val ()
-            
-            
-            if (value === trivia[i].correctAnswer){
-                correct++;
-            }else {
-                wrong++;
-            }
-        }
-        console.log(done)
-    })
-}
+  start: function() {
+    timer = setInterval(game.countdown, 1000);
 
+    $("#sub-wrapper").prepend(
+      "<h2>Time Remaining: <span id='counter-number'>30</span> Seconds</h2>"
+    );
 
-// On click DONE button RESULTS CONTAINER DISPLAY 
+    $("#start").remove();
+
+    for (var i = 0; i < questions.length; i++) {
+      card.append("<h2>" + questions[i].question + "</h2>");
+      for (var j = 0; j < questions[i].answers.length; j++) {
+        card.append("<input type='radio' name='question-" + i +
+          "' value='" + questions[i].answers[j] + "''>" + questions[i].answers[j]);
+      }
+    }
+
+    card.append("<button id='done'>Check Answers</button>");
+  },
+
+  done: function() {
+    var inputs = card.children("input:checked");
+    for (var i = 0; i < inputs.length; i++) {
+      if ($(inputs[i]).val() === questions[i].correctAnswer) {
+        game.correct++;
+      } else {
+        game.incorrect++;
+      }
+    }
+    this.result();
+  },
+
+  result: function() {
+    clearInterval(timer);
+
+    $("#sub-wrapper h2").remove();
+
+    card.html("<h2>Times Up!</h2>");
+    card.append("<h3>Correct Answers: " + this.correct + "</h3>");
+    card.append("<h3>Incorrect Answers: " + this.incorrect + "</h3>");
+  }
+};
+
+// CLICK EVENTS
+
+$(document).on("click", "#start", function() {
+  game.start();
+});
+
+$(document).on("click", "#done", function() {
+  game.done();
+});
+
 
 
 
