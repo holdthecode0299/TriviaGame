@@ -1,5 +1,7 @@
 # TriviaGame
 
+Access Trivia through this link.
+https://holdthecode0299.github.io/TriviaGame/
 
 Tools Used 
 
